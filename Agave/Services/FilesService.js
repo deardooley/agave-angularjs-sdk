@@ -5,1016 +5,96 @@
   */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('SystemsController',function($q,Configuration,HttpClient,APIHelper){
+angular.module('AgavePlatformScienceAPILib').factory('FilesService',function($q,Configuration,HttpClient,APIHelper){
     return{
         /**
-         * Show all systems available to the user.
-         * @param {int} offset    Required parameter: The number of results skipped in the result set returned from this query
-         * @param {bool|null} mdefault    Optional parameter: If true, only default systems be returned
-         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
-         * @param {bool|null} mpublic    Optional parameter: If true, only public systems will be returned. If false, no public systems will be returned. If null, both public and private systems will be returned.
-         * @param {SystemTypeEnum|null} type    Optional parameter: The type of system to return
+         * Upload a file to the user's default storage system.
+         * @param {string} fileToUpload    Required parameter: Boolean flag indicating this file should be appended to the target file
+         * @param {string|null} append    Optional parameter: Booelan
+         * @param {string|null} fileName    Optional parameter: The name of the file after importing. If not specified, the uploaded file name will be used.
+         * @param {string|null} fileType    Optional parameter: The file format this file is in. Defaults to raw. This will be used in file transform operations.
+         * @param {string|null} notifications    Optional parameter: The URI to notify when the import is complete. This can be an email address or http URL. If a URL is given, a GET will be made to this address. URL templating is supported. Valid template values are: ${NAME}, ${SOURCE_FORMAT}, ${DEST_FORMAT}, ${STATUS}
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
          *
-         * @return {promise<array>}
+         * @return {promise<FileInfo>}
          */
-        listSystems : function(offset, mdefault, limit, mpublic, type){
+        uploadFileItemToDefaultSystem : function(fileToUpload, append, fileName, fileType, notifications, path){
             //Assign default values
-            offset = offset || 0;
-            limit = limit || 100;
+            append = append || "false";
 
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/";
-            
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true,
-                "offset" : offset,
-                "default" : mdefault,
-                "limit" : (null != limit)? limit: 100,
-                "public" : mpublic,
-                "type" : (type != null)?type:null
-            });
+            var queryBuilder = baseUri + "/files/v2/media/{path}";
 
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Add a new execution system
-         * @param {SystemRequest} body    Required parameter: The description of the system to add or update.
-         *
-         * @return {promise<ExecutionSystem>}
-         */
-        addExecutionSystem : function(body){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/";
-            
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Find information about an individual system.
-         * @param {string} systemId    Required parameter: The unique id of the system
-         *
-         * @return {promise<System>}
-         */
-        getSystemDetails : function(systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}";
-            
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Update a system description
-         * @param {SystemRequest} body    Required parameter: The description of the system to update.
-         * @param {string} systemId    Required parameter: The unique id of the system
-         *
-         * @return {promise<System>}
-         */
-        updateSystem : function(body, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Delete a system.
-         * @param {string} systemId    Required parameter: The unique id of the system
-         *
-         * @return {promise<void>}
-         */
-        deleteSystem : function(systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Deletes all roles on a system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<void>}
-         */
-        deleteClearSystemRoles : function(systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/roles";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Update a user's role on a system.
-         * @param {SystemRoleRequest} body    Required parameter: The role to update.
-         * @param {string} systemId    Required parameter: The id of the system.
-         * @param {string} username    Required parameter: The username of the api user associated with the role
-         *
-         * @return {promise<SystemRole>}
-         */
-        updateSystemRole : function(body, systemId, username){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/roles/{username}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId,
-                "username" : username
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Add an internal user's credential on a system. This applies both to storage and, if applicable, login credentials.
-         * @param {SystemCredential} body    Required parameter: The description of the internal user credential to add or update.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<array>}
-         */
-        addSystemCredential : function(body, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Deletes all credentials registered to a system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<void>}
-         */
-        deleteClearSystemAuthCredentials : function(systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Get a list of all internal users and their credentials on this system.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<SystemCredentialsResponse>}
-         */
-        listCredentialsForInternalUser : function(internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Update an internal user's credentials on a system.
-         * @param {SystemAuthConfig} body    Required parameter: The description of the internal user credential to add or update.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<SystemCredential>}
-         */
-        updateSystemCredential : function(body, internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Get the internal user credential of the given type on the system.
-         * @param {SystemCredentialTypeEnum} credentialType    Required parameter: The configuration type to which to apply this credential.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<SystemCredential>}
-         */
-        getSystemCredential : function(credentialType, internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}/{credentialType}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "credentialType" : (credentialType != null)?credentialType:null,
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Add or update a credential of the given type on a system.
-         * @param {SystemAuthConfig} body    Required parameter: The description of the internal user credential to add or update.
-         * @param {SystemCredentialTypeEnum} credentialType    Required parameter: The configuration type to which to apply this credential.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<SystemCredential>}
-         */
-        updateSystemCredentialOfType : function(body, credentialType, internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}/{credentialType}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "credentialType" : (credentialType != null)?credentialType:null,
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Deletes the internal user credentials for the given credential type on a system.
-         * @param {SystemCredentialTypeEnum} credentialType    Required parameter: The configuration type to which to apply this credential.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<void>}
-         */
-        deleteSystemAuthCredentialForInternalUser : function(credentialType, internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}/{credentialType}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "credentialType" : (credentialType != null)?credentialType:null,
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Add  a storage system
-         * @param {SystemRequest} body    Required parameter: Description of a storage system
-         *
-         * @return {promise<StorageSystem>}
-         */
-        addStorageSystem : function(body){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2";
-            
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "content-type" : "application/json; charset=utf-8",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //Remove null values
-            APIHelper.cleanObject(body);
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "POST",
-                queryUrl : queryUrl,
-                headers: headers,
-                body : body
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Deletes all internal user credentials registered to a system.
-         * @param {string} internalUsername    Required parameter: The username of a internal user on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         *
-         * @return {promise<void>}
-         */
-        deleteClearSystemAuthCredentialsForInternalUser : function(internalUsername, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials/{internalUsername}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "internalUsername" : internalUsername,
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Deletes all roles for a user on a system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         * @param {string} username    Required parameter: The username of the api user associated with the role
-         *
-         * @return {promise<void>}
-         */
-        deleteSystemRole : function(systemId, username){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/roles/{username}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId,
-                "username" : username
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "DELETE",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Get a list of all internal user credentials on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
-         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
-         *
-         * @return {promise<array>}
-         */
-        listSystemCredentials : function(systemId, limit, offset){
-            //Assign default values
-            limit = limit || 100;
-            offset = offset || 0;
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/credentials";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
+                "path" : path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
                 "naked" : true,
-                "limit" : (null != limit)? limit: 100,
-                "offset" : (null != offset)? offset: 0
+                "append" : (null != append)? append: "false"
             });
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
                 "Authorization" : "Bearer " + Configuration.oAuthAccessToken
             };
 
+            //prepare form data
+            var formDataDictionary = {
+                "fileToUpload" : fileToUpload,
+                "fileName" : fileName,
+                "fileType" : fileType,
+                "notifications" : notifications
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(formDataDictionary);
+
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method : "GET",
+                method : "POST",
                 queryUrl : queryUrl,
                 headers: headers,
+                formData : formDataDictionary,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
-         * Get a specific user's roles on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         * @param {string} username    Required parameter: The username of the user about whose role you are inquiring.
+         * Perform an action on a file or folder.
+         * @param {FileAction} body    Required parameter: The operation to perform.
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
          *
-         * @return {promise<SystemRole>}
+         * @return {promise<mixed>}
          */
-        getSystemRole : function(systemId, username){
+        updateInvokeFileActionOnDefaultSystem : function(body, path){
 
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/roles/{username}";
-            
+            var queryBuilder = baseUri + "/files/v2/media/{path}";
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId,
-                "username" : username
+                "path" : path
             });
 
             //Process query parameters
@@ -1024,119 +104,7 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
 
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Get a list of all users and their roles on this system.
-         * @param {string} systemId    Required parameter: The id of the system.
-         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
-         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
-         *
-         * @return {promise<MultipleSystemRoleResponse>}
-         */
-        listSystemRoles : function(systemId, limit, offset){
-            //Assign default values
-            limit = limit || 100;
-            offset = offset || 0;
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}/roles";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true,
-                "limit" : (null != limit)? limit: 100,
-                "offset" : (null != offset)? offset: 0
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
-            //prepare headers
-            var headers = {
-                "accept" : "application/json",
-                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
-            };
-
-            //prepare and invoke the API call request to fetch the response
-            var config = {
-                method : "GET",
-                queryUrl : queryUrl,
-                headers: headers,
-            };
-            
-            var response = HttpClient(config);
-                    
-            //Create promise to return
-            var deffered= $q.defer();
-                    
-            //process response
-            response.then(function(result){
-                deffered.resolve(result.body);
-            },function(result){
-                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
-            });
-            
-            return deffered.promise;
-        },
-        /**
-         * Clone a system into  a new system. Previous system's auth credentials are not copied over
-         * @param {SystemCloneAction} body    Required parameter: A clone action request with id of new system
-         * @param {string} systemId    Required parameter: The unique id of the system
-         *
-         * @return {promise<System>}
-         */
-        updateCloneSystem : function(body, systemId){
-
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}";
-            
-            //Process template parameters
-            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked" : true
-            });
-
-            //validate and preprocess url
-            var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -1154,36 +122,92 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
-         * Perform a management action on the system.
-         * @param {SystemAction} body    Required parameter: The action to invoke
-         * @param {string} systemId    Required parameter: The id of the system receiving the action
+         * Deletes a file or folder on the user's default storage system.
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
          *
          * @return {promise<void>}
          */
-        updateInvokeSystemAction : function(body, systemId){
+        deleteFileItemOnDefaultSystem : function(path){
 
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/v2/{systemId}";
-            
+            var queryBuilder = baseUri + "/files/v2/media/{path}";
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "DELETE",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Upload a file to the given system
+         * @param {string} fileToUpload    Required parameter: The file to upload to the remote system
+         * @param {string} path    Required parameter: The path of the file relative to the user's default storage location.
+         * @param {string} systemId    Required parameter: The unique id of the system on which the data resides.
+         * @param {string|null} fileName    Optional parameter: The name of the file after importing. If not specified, the uploaded file name will be used.
+         * @param {string|null} fileType    Optional parameter: The file format this file is in. Defaults to raw. This will be used in file transform operations.
+         * @param {string|null} notifications    Optional parameter: The URI to notify when the import is complete. This can be an email address or http URL. If a URL is given, a GET will be made to this address. URL templating is supported. Valid template values are: ${NAME}, ${SOURCE_FORMAT}, ${DEST_FORMAT}, ${STATUS}
+         *
+         * @return {promise<FileInfo>}
+         */
+        uploadFileItem : function(fileToUpload, path, systemId, fileName, fileType, notifications){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path,
                 "systemId" : systemId
             });
 
@@ -1194,9 +218,77 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare form data
+            var formDataDictionary = {
+                "fileToUpload" : fileToUpload,
+                "fileName" : fileName,
+                "fileType" : fileType,
+                "notifications" : notifications
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(formDataDictionary);
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "POST",
+                queryUrl : queryUrl,
+                headers: headers,
+                formData : formDataDictionary,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Perform an action on a file or folder.
+         * @param {FileAction} body    Required parameter: The operation to perform.
+         * @param {string} systemId    Required parameter: The unique id of the system on which the data resides.
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<mixed>}
+         */
+        updateInvokeFileItemAction : function(body, systemId, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
                 "content-type" : "application/json; charset=utf-8",
                 "Authorization" : "Bearer " + Configuration.oAuthAccessToken
             };
@@ -1211,37 +303,98 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
-         * Adds a role on the system for the given user
-         * @param {SystemRoleRequest} body    Required parameter: The new role to grant
-         * @param {string} systemId    Required parameter: The id of the system on which to grant the role
+         * Get a remote directory listing on a specific system.
+         * @param {string} systemId    Required parameter: The unique id of the system on which the data resides.
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
          *
-         * @return {promise<SystemRole>}
+         * @return {promise<array>}
          */
-        addSystemRole : function(body, systemId){
+        listFileItems : function(systemId, limit, offset, path){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
 
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/systems/{systemId}/roles";
-            
+            var queryBuilder = baseUri + "/files/v2/listings/system/{systemId}/{path}";
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId" : systemId
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Update permissions for a single user on their default storage system.
+         * @param {FilePermissionRequest} body    Required parameter: The permission add or update.
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<FilePermission>}
+         */
+        updateFileItemPermissionsOnDefaultSystem : function(body, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/pems/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
             });
 
             //Process query parameters
@@ -1251,7 +404,7 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -1269,19 +422,720 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController',functio
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
+            return deffered.promise;
+        },
+        /**
+         * Update permissions for a single user.
+         * @param {PermissionRequest} body    Required parameter: The updated permission value
+         * @param {string} systemId    Required parameter: The id of the system on which the file resides
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<FilePermission>}
+         */
+        updateFileItemPermission : function(body, systemId, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "content-type" : "application/json; charset=utf-8",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(body);
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "POST",
+                queryUrl : queryUrl,
+                headers: headers,
+                body : body
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Download a file from the user's default storage location.
+         * @param {string} filePath    Required parameter: The path of the file relative to the given system root location.
+         * @param {string} systemId    Required parameter: The system on which the file item resides
+         * @param {string|null} created    Optional parameter: The date the event occurred
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} status    Optional parameter: The status of the event
+         *
+         * @return {promise<HistoryEvent>}
+         */
+        listFileItemHistory : function(filePath, systemId, created, limit, offset, status){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/history/system/{systemId}/{filePath}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "filePath" : filePath,
+                "systemId" : systemId
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "created" : created,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0,
+                "status" : status
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * List event history of a file item on the user's default storage system
+         * @param {string|null} created    Optional parameter: The date the event occurred
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         * @param {string|null} status    Optional parameter: The event status
+         *
+         * @return {promise<array>}
+         */
+        listFileItemHistoryOnDefaultSystem : function(created, limit, offset, path, status){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/history/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "created" : created,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0,
+                "status" : status
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Deletes a file or folder at the specified path on the specified remote system.
+         * @param {string} path    Required parameter: The path of the file relative to the user's default storage location.
+         * @param {string} systemId    Required parameter: The unique id of the system on which the data resides.
+         *
+         * @return {promise<void>}
+         */
+        deleteFileItem : function(path, systemId){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path,
+                "systemId" : systemId
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "DELETE",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Deletes all permissions on a file except those of the owner.
+         * @param {string} systemId    Required parameter: The id of the system on which the file item lives.
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<void>}
+         */
+        deleteClearFileItemPermissions : function(systemId, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "DELETE",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Download a file from the given system
+         * @param {string} path    Required parameter: The path of the file relative to the user's default storage location.
+         * @param {string} systemId    Required parameter: The unique id of the system on which the data resides.
+         * @param {bool|null} force    Optional parameter: Boolean flag to indicate whether the Content-Disposition header should be set to force a browser download.
+         *
+         * @return {promise<binary>}
+         */
+        getDownloadFileItem : function(path, systemId, force){
+            //Assign default values
+            force = force || false;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path,
+                "systemId" : systemId
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "force" : (null != force)? force: false
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Download a file from the user's default storage location.
+         * @param {string} path    Required parameter: The path of the file relative to the user's default storage location.
+         * @param {bool|null} force    Optional parameter: Boolean flag to indicate whether the Content-Disposition header should be set to force browser file download.
+         *
+         * @return {promise<binary>}
+         */
+        getDownloadFileItemOnDefaultSystem : function(path, force){
+            //Assign default values
+            force = force || false;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "force" : (null != force)? force: false
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Get a remote directory listing on the user's default storage system
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<array>}
+         */
+        listFileItemsOnDefaultSystem : function(limit, offset, path){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/listings/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * List all the share permissions for a file or folder.
+         * @param {string} systemId    Required parameter: The system id
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<array>}
+         */
+        listFileItemPermissions : function(systemId, limit, offset, path){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * List all the share permissions for a file or folder.
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} path    Optional parameter: The path of the file relative to the user's default storage location.
+         *
+         * @return {promise<array>}
+         */
+        listFileItemPermissionsOnDefaultSystem : function(limit, offset, path){
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/pems/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true,
+                "limit" : (null != limit)? limit: 100,
+                "offset" : (null != offset)? offset: 0
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "GET",
+                queryUrl : queryUrl,
+                headers: headers,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Import file item from a remote URL to the target system
+         * @param {FileImportRequest} body    Required parameter: The import request
+         * @param {string} systemId    Required parameter: The id of the system.
+         * @param {string|null} path    Optional parameter: The relative or absolute path where the file item should be imported
+         *
+         * @return {promise<FileInfo>}
+         */
+        createImportFileItem : function(body, systemId, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "systemId" : systemId,
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : true
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "content-type" : "application/json; charset=utf-8",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(body);
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "POST",
+                queryUrl : queryUrl,
+                headers: headers,
+                body : body
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
+         * Import file item from a remote URL to the target system
+         * @param {FileImportRequest} body    Required parameter: The import request
+         * @param {string|null} path    Optional parameter: The relative or absolute path where the file item should be imported
+         *
+         * @return {promise<FileInfo>}
+         */
+        createImportFileItemToDefaultSystem : function(body, path){
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/{path}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path" : path
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked" : "true"
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept" : "application/json",
+                "content-type" : "application/json; charset=utf-8",
+                "Authorization" : "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(body);
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method : "POST",
+                queryUrl : queryUrl,
+                headers: headers,
+                body : body
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered= $q.defer();
+
+            //process response
+            response.then(function(result){
+                deffered.resolve(result.body);
+            },function(result){
+                deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
+            });
+
             return deffered.promise;
         }
     }

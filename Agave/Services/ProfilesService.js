@@ -5,7 +5,7 @@
   */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',function($q,Configuration,HttpClient,APIHelper){
+angular.module('AgavePlatformScienceAPILib').factory('ProfilesService',function($q,Configuration,HttpClient,APIHelper){
     return{
         /**
          * Find api user profile by their api username
@@ -20,7 +20,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{username}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "username" : username
@@ -33,7 +33,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -46,12 +46,12 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -73,7 +73,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -87,7 +87,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername
@@ -100,7 +100,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "Authorization" : "Bearer " + Configuration.oAuthAccessToken
@@ -112,19 +112,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -139,7 +139,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername
@@ -152,7 +152,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -170,19 +170,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -198,7 +198,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users/{internalUsername}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername,
@@ -212,7 +212,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -230,19 +230,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -257,7 +257,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users/{internalUsername}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername,
@@ -271,7 +271,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -284,19 +284,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -312,7 +312,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/";
-            
+
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
                 "naked" : true,
@@ -323,7 +323,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -336,12 +336,12 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -363,7 +363,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -380,7 +380,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername
@@ -396,7 +396,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -409,19 +409,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -436,7 +436,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}/users/{internalUsername}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername,
@@ -450,7 +450,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -463,19 +463,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -489,7 +489,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2";
-            
+
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
                 "naked" : true
@@ -497,7 +497,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -515,19 +515,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -542,7 +542,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/profiles/v2/{apiUsername}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "apiUsername" : apiUsername
@@ -555,7 +555,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -573,19 +573,19 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController',functi
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
             },function(result){
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         }
     }

@@ -7,17 +7,17 @@ How To Configure:
 The generated code might need to be configured with your API credentials. To do that,
 open the file "Configuration.js" and edit it's contents.
 
-How To Build: 
+How To Build:
 =============
-The generated code relies on AngularJS framework being available . 
+The generated code relies on AngularJS framework being available .
 
 How To Use:
 ===========
-The following shows how import the controllers and use:
+The following shows how import the Services and use:
 
 1) Add the folder 'Agave' into your to your scripts folder e.g scripts.
-   
-2) Import the reference to these files inside the appropriate html file such as index.html. 
+
+2) Import the reference to these files inside the appropriate html file such as index.html.
    The configuration.js file should be imported before the other files.
 
 
@@ -29,18 +29,18 @@ The following shows how import the controllers and use:
     <script src="scripts/Agave/Http/Request/HttpRequest.js"></script>
     <script src="scripts/Agave/Http/Response/HttpResponse.js"></script>
 
-    <!-- API Controllers -->
-    <script src="scripts/Agave/Controllers/ClientsController.js"></script>
-    <script src="scripts/Agave/Controllers/AppsController.js"></script>
-    <script src="scripts/Agave/Controllers/FilesController.js"></script>
-    <script src="scripts/Agave/Controllers/JobsController.js"></script>
-    <script src="scripts/Agave/Controllers/MetaController.js"></script>
-    <script src="scripts/Agave/Controllers/MonitorsController.js"></script>
-    <script src="scripts/Agave/Controllers/NotificationsController.js"></script>
-    <script src="scripts/Agave/Controllers/PostitsController.js"></script>
-    <script src="scripts/Agave/Controllers/ProfilesController.js"></script>
-    <script src="scripts/Agave/Controllers/SystemsController.js"></script>
-    <script src="scripts/Agave/Controllers/TransformsController.js"></script>
+    <!-- API Services -->
+    <script src="scripts/Agave/Services/ClientsService.js"></script>
+    <script src="scripts/Agave/Services/AppsService.js"></script>
+    <script src="scripts/Agave/Services/FilesService.js"></script>
+    <script src="scripts/Agave/Services/JobsService.js"></script>
+    <script src="scripts/Agave/Services/MetaService.js"></script>
+    <script src="scripts/Agave/Services/MonitorsService.js"></script>
+    <script src="scripts/Agave/Services/NotificationsService.js"></script>
+    <script src="scripts/Agave/Services/PostitsService.js"></script>
+    <script src="scripts/Agave/Services/ProfilesService.js"></script>
+    <script src="scripts/Agave/Services/SystemsService.js"></script>
+    <script src="scripts/Agave/Services/TransformsService.js"></script>
 
     <!-- ENUM Models -->
     <script src="scripts/Agave/Models/JobStatusTypeEnum.js"></script>
@@ -190,8 +190,8 @@ The following shows how import the controllers and use:
 
     var myApp = angular.module('myApp', ['Agave'])
 
-4) To use a generated factory in your controller, injection could be as follows : 
- 
-    myApp.controller('PageCtrl',function($scope,ClientsController) {
+4) To use a generated factory in your Service, injection could be as follows :
+
+    myApp.Service('PageCtrl',function($scope,ClientsService) {
 
     }

@@ -5,7 +5,7 @@
   */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',function($q,Configuration,HttpClient,APIHelper){
+angular.module('AgavePlatformScienceAPILib').factory('NotificationsService',function($q,Configuration,HttpClient,APIHelper){
     return{
         /**
          * Add new notification.
@@ -18,7 +18,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/notifications/v2/";
-            
+
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
                 "naked" : true
@@ -26,7 +26,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -44,12 +44,12 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -71,7 +71,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -90,7 +90,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/notifications/v2/";
-            
+
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
                 "associatedUuid" : associatedUuid,
@@ -101,7 +101,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -114,12 +114,12 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -144,7 +144,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -158,7 +158,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/notifications/v2/{uuid}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "uuid" : uuid
@@ -171,7 +171,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -184,12 +184,12 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -214,7 +214,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -229,7 +229,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/notifications/v2/{uuid}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "uuid" : uuid
@@ -242,7 +242,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "accept" : "application/json",
@@ -260,12 +260,12 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
                 headers: headers,
                 body : body
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -287,7 +287,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         },
         /**
@@ -301,7 +301,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/notifications/v2/{uuid}";
-            
+
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "uuid" : uuid
@@ -314,7 +314,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
-            
+
             //prepare headers
             var headers = {
                 "Authorization" : "Bearer " + Configuration.oAuthAccessToken
@@ -326,12 +326,12 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
                 queryUrl : queryUrl,
                 headers: headers,
             };
-            
+
             var response = HttpClient(config);
-                    
+
             //Create promise to return
             var deffered= $q.defer();
-                    
+
             //process response
             response.then(function(result){
                 deffered.resolve(result.body);
@@ -353,7 +353,7 @@ angular.module('AgavePlatformScienceAPILib').factory('NotificationsController',f
 
                 deffered.reject(APIHelper.appendContext({errorMessage:"HTTP Response Not OK", errorCode: result.code, errorResponse: result.message},result.getContext()));
             });
-            
+
             return deffered.promise;
         }
     }
