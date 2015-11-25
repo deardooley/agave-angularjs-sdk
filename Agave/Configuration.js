@@ -5,14 +5,14 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib',[]).factory('Configuration', function() {
+angular.module('AgavePlatformScienceAPILib', []).factory('Configuration', function () {
     return {
         //The base Uri for API calls
-        BASEURI : "https://agave.iplantc.org",
+        BASEURI: "https://agave.iplantc.org",
 
         //The OAuth 2.0 access token to be set before API calls
         //TODO: Replace the oAuthAccessToken with an appropriate value
-        oAuthAccessToken : "TODO: Replace"
+        oAuthAccessToken: '3c93e688eabb99072348487b4518c8d'//AccessToken.get()
 
     };
 });
