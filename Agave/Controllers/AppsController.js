@@ -49,6 +49,7 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
                 method: "GET",
                 queryUrl: queryUrl,
                 headers: headers,
+                cache: true
             };
 
             var response = HttpClient(config);

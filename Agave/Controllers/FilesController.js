@@ -80,6 +80,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
                 queryUrl: queryUrl,
                 headers: headers,
                 formData: body,
+                cache: true
             };
 
             var response = HttpClient(config);

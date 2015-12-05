@@ -13,7 +13,8 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
         var options = {
             url: req.queryUrl,
             method: req.method,
-            headers: req.headers
+            headers: req.headers,
+            cache: req.cache,
         };
         if (req.username) {
             //Basic auth....

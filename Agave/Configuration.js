@@ -12,8 +12,11 @@ angular.module('AgavePlatformScienceAPILib', []).factory('Configuration', functi
 
         //The OAuth 2.0 access token to be set before API calls
         //TODO: Replace the oAuthAccessToken with an appropriate value
-        oAuthAccessToken: '3c93e688eabb99072348487b4518c8d'//AccessToken.get()
+        oAuthAccessToken: ''
 
     };
 });
+//.config(['$localStorageProvider', function ($localStorageProvider) {
+//    $localStorageProvider.setKeyPrefix('AgaveToGo');
+//}]);
 

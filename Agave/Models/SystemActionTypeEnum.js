@@ -35,6 +35,15 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemActionTypeEnum', fun
 
         //TODO: Write general description for this element
 
+        ENABLE: "ENABLE",
+
+        //TODO: Write general description for this element
+
+        DISABLE: "DISABLE",
+
+
+        //TODO: Write general description for this element
+
         UNSETGLOBALDEFAULT: "UNSETGLOBALDEFAULT",
 
 
