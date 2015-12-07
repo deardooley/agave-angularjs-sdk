@@ -23,7 +23,7 @@ angular.module('AgavePlatformScienceAPILib').factory('TenantsController', functi
 
             //prepare query string for API call
             var baseUri = "http://agaveapi.co"
-            var queryBuilder = baseUri + "/tenants";
+            var queryBuilder = baseUri + "/tenants/";
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
@@ -58,7 +58,7 @@ angular.module('AgavePlatformScienceAPILib').factory('TenantsController', functi
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body.result);
+                deffered.resolve(result.body);
             }, function (result) {
                 deffered.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",

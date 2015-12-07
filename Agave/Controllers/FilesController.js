@@ -442,7 +442,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
          *
          * @return {promise<array>}
          */
-        listFileItems: function (systemId, limit, offset, path) {
+        listFileItems: function (systemId, path, limit, offset) {
             //Assign default values
             limit = limit || 100;
             offset = offset || 0;

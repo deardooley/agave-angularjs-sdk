@@ -57,36 +57,6 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController', funct
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
-                    deffered.reject(APIHelper.appendContext({
-                        errorMessage: "Raised if a user supplies an invalid username format",
-                        errorCode: 400,
-                        errorResponse: result.message
-                    }, result.getContext()));
-                    return;
-                } else if (code == 403) {
-                    deffered.reject(APIHelper.appendContext({
-                        errorMessage: "Failed to authenticate the user",
-                        errorCode: 403,
-                        errorResponse: result.message
-                    }, result.getContext()));
-                    return;
-                } else if (code == 404) {
-                    deffered.reject(APIHelper.appendContext({
-                        errorMessage: "The user profile cannot be found",
-                        errorCode: 404,
-                        errorResponse: result.message
-                    }, result.getContext()));
-                    return;
-                } else if (code == 500) {
-                    deffered.reject(APIHelper.appendContext({
-                        errorMessage: "The service was unable to query the profile database",
-                        errorCode: 500,
-                        errorResponse: result.message
-                    }, result.getContext()));
-                    return;
-                }
-
                 deffered.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,

@@ -5,14 +5,14 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib', []).factory('Configuration', function () {
+angular.module('AgavePlatformScienceAPILib', ['ngStorage']).factory('Configuration', function ($localStorage) {
     return {
         //The base Uri for API calls
-        BASEURI: "https://agave.iplantc.org",
+        BASEURI: $localStorage.tenant ? $localStorage.tenant.baseUrl : "https://agave.iplantc.org",
 
         //The OAuth 2.0 access token to be set before API calls
         //TODO: Replace the oAuthAccessToken with an appropriate value
-        oAuthAccessToken: ''
+        oAuthAccessToken: $localStorage.token ? $localStorage.token.access_token : ''
 
     };
 });
