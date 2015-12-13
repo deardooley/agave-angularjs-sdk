@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('FilesController', function ($q, Configuration, HttpClient, APIHelper) {
+angular.module('AgavePlatformScienceAPILib').factory('FilesController', function ($q, Configuration, HttpClient, APIHelper, FileManagementActionTypeEnum) {
     return {
         /**
          * Upload a file to the user's default storage system.

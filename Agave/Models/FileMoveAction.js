@@ -6,7 +6,7 @@
 
 //Request for a file/folder to be moved on the target system. Metadata will be preserved after move.
 function FileMoveAction() {
-    this.action = FileManagementActionTypeEnum.MOVE;
+    this.action = "MOVE";
     this.append = false;
 }
 

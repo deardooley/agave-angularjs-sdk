@@ -5,7 +5,7 @@
  */
 
 function FileMkdirAction() {
-    this.action = FileManagementActionTypeEnum.MKDIR;
+    this.action = "MKDIR";
 }
 
 //Make instanceof work

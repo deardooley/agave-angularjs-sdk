@@ -5,7 +5,7 @@
  */
 
 function FileCopyAction() {
-    this.action = FileManagementActionTypeEnum.COPY;
+    this.action = "COPY";
     this.append = false;
 }
 

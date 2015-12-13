@@ -54,7 +54,11 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController', funct
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                if (result.body.result) {
+                    deffered.resolve(result.body.result);
+                } else {
+                    deffered.resolve(result.body);
+                }
             }, function (result) {
                 //Error handling for custom HTTP status codes
                 deffered.reject(APIHelper.appendContext({
