@@ -7,6 +7,11 @@
 'use strict';
 angular.module('AgavePlatformScienceAPILib').factory('FilesController', function ($q, Configuration, HttpClient, APIHelper, FileManagementActionTypeEnum) {
     return {
+
+        getPublicUrlForSystemAndPath: function(systemId, path) {
+            return Configuration.BASEURI + '/files/v2/download/' + $localStorage.activeProfile.username + '/system/' + systemId + '/media/' + path;
+        },
+
         /**
          * Upload a file to the user's default storage system.
          * @param {string|blob} content         Required parameter: The blob content to upload
@@ -328,7 +333,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "accept": "application/json",
+                "accept": "multipart/form-data",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 

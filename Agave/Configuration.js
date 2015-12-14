@@ -6,17 +6,29 @@
 
 'use strict';
 angular.module('AgavePlatformScienceAPILib', ['ngStorage']).factory('Configuration', function ($localStorage) {
+
+    var accessToken = $localStorage.token ? $localStorage.token.access_token : '';
+    var baseUri = $localStorage.tenant ? $localStorage.tenant.baseUrl : "https://agave.iplantc.org";
+
     return {
         //The base Uri for API calls
-        BASEURI: $localStorage.tenant ? $localStorage.tenant.baseUrl : "https://agave.iplantc.org",
+        BASEURI: baseUri,
 
         //The OAuth 2.0 access token to be set before API calls
         //TODO: Replace the oAuthAccessToken with an appropriate value
-        oAuthAccessToken: $localStorage.token ? $localStorage.token.access_token : ''
+        oAuthAccessToken: accessToken,
 
     };
-});
-//.config(['$localStorageProvider', function ($localStorageProvider) {
-//    $localStorageProvider.setKeyPrefix('AgaveToGo');
-//}]);
 
+    $scope.$watch('$localStorage.token', function(value){
+        $timeout(function () {
+            accessToken = $localStorage.token ? $localStorage.token.access_token : '';
+        }, 0);
+    }, true);
+
+    $scope.$watch('$localStorage.tenant', function(value){
+        $timeout(function () {
+            baseUri = $localStorage.tenant ? $localStorage.tenant.baseUrl : '';
+        }, 0);
+    }, true);
+});
