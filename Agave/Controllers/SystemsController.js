@@ -26,15 +26,19 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/systems/v2/";
 
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+            var params = {
                 "naked": true,
                 "offset": offset,
-                "default": onlyDefault,
                 "limit": (null != limit) ? limit : 100,
-                "public": onlyPublic,
                 "type": (type != null) ? type : null
-            });
+            };
+
+            if (onlyDefault) params['default'] = onlyDefault;
+            if (onlyPublic) params["public"] = onlyPublic;
+            if (type) params["type"] = type;
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, params);
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
