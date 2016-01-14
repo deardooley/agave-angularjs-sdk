@@ -34,7 +34,7 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             };
 
             if (onlyDefault) params['default'] = onlyDefault;
-            if (onlyPublic) params["public"] = onlyPublic;
+            params["public"] = onlyPublic;
             if (type) params["type"] = type;
 
             //Process query parameters
