@@ -11,13 +11,13 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
          * Show all systems available to the user.
          * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
          * @param {int} offset    Required parameter: The number of results skipped in the result set returned from this query
-         * @param {bool|null} mdefault    Optional parameter: If true, only default systems be returned
-         * @param {bool|null} mpublic    Optional parameter: If true, only public systems will be returned. If false, no public systems will be returned. If null, both public and private systems will be returned.
+         * @param {bool|null} default    Optional parameter: If true, only default systems be returned
+         * @param {bool|null} public    Optional parameter: If true, only public systems will be returned. If false, no public systems will be returned. If null, both public and private systems will be returned.
          * @param {SystemTypeEnum|null} type    Optional parameter: The type of system to return
          *
          * @return {promise<array>}
          */
-        listSystems: function (limit, offset, onlyDefault, onlyPublic, type) {
+        listSystems: function (limit, offset, defaultSystems, publicSystems, type) {
             //Assign default values
             offset = offset || 0;
             limit = limit || 9999999;
@@ -33,8 +33,8 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
                 "type": (type != null) ? type : null
             };
 
-            if (onlyDefault) params['default'] = onlyDefault;
-            params["public"] = onlyPublic;
+            if (defaultSystems) params['default'] = defaultSystems;
+            if (publicSystems) params["public"] = publicSystems;
             if (type) params["type"] = type;
 
             //Process query parameters
