@@ -7,7 +7,7 @@
 'use strict';
 angular.module('AgavePlatformScienceAPILib', ['ngStorage']).factory('Configuration', function ($localStorage) {
 
-    var accessToken = $localStorage.token ? $localStorage.token.access_token : '';
+    var accessToken = $localStorage.token ? $localStorage.token.access_token : 'd129ae5def616d596487e5238cef59dc';
     var baseUri = $localStorage.tenant ? $localStorage.tenant.baseUrl : "https://agave.iplantc.org";
 
     return {
@@ -22,13 +22,13 @@ angular.module('AgavePlatformScienceAPILib', ['ngStorage']).factory('Configurati
 
     $scope.$watch('$localStorage.token', function(value){
         $timeout(function () {
-            accessToken = $localStorage.token ? $localStorage.token.access_token : '';
+            accessToken = $localStorage.token ? $localStorage.token.access_token : 'd129ae5def616d596487e5238cef59dc';
         }, 0);
     }, true);
 
     $scope.$watch('$localStorage.tenant', function(value){
         $timeout(function () {
-            baseUri = $localStorage.tenant ? $localStorage.tenant.baseUrl : '';
+            baseUri = $localStorage.tenant ? $localStorage.tenant.baseUrl : 'd129ae5def616d596487e5238cef59dc';
         }, 0);
     }, true);
 });

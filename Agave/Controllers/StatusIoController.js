@@ -19,7 +19,7 @@ angular.module('AgavePlatformScienceAPILib').factory('StatusIoController', funct
 
             //prepare headers
             var headers = {
-                "accept": "application/json",
+                "Accept": "Application/json",
             };
 
             //prepare and invoke the API call request to fetch the response
