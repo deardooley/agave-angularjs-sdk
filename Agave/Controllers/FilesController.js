@@ -212,7 +212,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             //prepare headers
             var headers = {
                 "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -405,7 +405,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             //prepare headers
             var headers = {
                 "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -474,7 +474,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -531,8 +531,8 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "accept": "application/json",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -595,8 +595,8 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "accept": "application/json",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -669,7 +669,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -736,7 +736,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -1031,7 +1031,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -1096,7 +1096,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -1159,7 +1159,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -1218,8 +1218,8 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "accept": "application/json",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -1280,8 +1280,8 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "accept": "application/json",
+                "Content-type": "Application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 

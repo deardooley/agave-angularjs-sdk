@@ -29,8 +29,8 @@ angular.module('AgavePlatformScienceAPILib').factory('PostitsController', functi
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
-                "Content-type": "Application/json; Charset=utf-8",
+                "accept": "application/json",
+                "content-type": "application/json; charset=utf-8",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 
@@ -177,7 +177,7 @@ angular.module('AgavePlatformScienceAPILib').factory('PostitsController', functi
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json",
+                "accept": "application/json",
                 "Authorization": "Bearer " + Configuration.oAuthAccessToken
             };
 

@@ -40,7 +40,7 @@ angular.module('AgavePlatformScienceAPILib').factory('TenantsController', functi
 
             //prepare headers
             var headers = {
-                "Accept": "Application/json"
+                "accept": "application/json"
             };
 
             //prepare and invoke the API call request to fetch the response
