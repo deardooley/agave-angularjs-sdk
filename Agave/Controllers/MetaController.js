@@ -58,35 +58,35 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user does not supply a UUID or supplies an invalid JSON query",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified metadata cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -152,28 +152,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user supplies an invalid form",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -239,35 +239,35 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user does not supply a UUID",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified metadata cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -339,28 +339,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user supplies an invalid form",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -425,28 +425,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user supplies no UUID",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -512,28 +512,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user supplies an invalid form or JSON schema",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the schema database",
                         errorCode: 500,
@@ -605,28 +605,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user supplies an invalid form or JSON schema",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the schema database",
                         errorCode: 500,
@@ -691,28 +691,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user does not supply a Schema UUID",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 401) {
+                } else if (result.code == 401) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if the user is not authorized.",
                         errorCode: 401,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the schema database",
                         errorCode: 500,
@@ -785,28 +785,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a metadata UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified metadata cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -878,28 +878,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a valid metadata UUID is not supplied or if the form is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified user cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -964,21 +964,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a metadata UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -1046,28 +1046,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a metadata UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified metadata cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -1141,28 +1141,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a valid metadata UUID is not supplied or if the form is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified user cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -1229,21 +1229,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a metadata UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified metadata.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata database",
                         errorCode: 500,
@@ -1316,28 +1316,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a schema UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified schema cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1409,28 +1409,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a valid schema UUID is not supplied or if the form is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified user cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1495,21 +1495,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a schema UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1577,28 +1577,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a schema UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified schema cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1672,28 +1672,28 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a valid schema UUID is not supplied or if the form is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 404) {
+                } else if (result.code == 404) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The specified user cannot be found",
                         errorCode: 404,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1760,21 +1760,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a schema UUID is not supplied or is invalid.",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user or the user is not authorized to access the specified schema.",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the metadata schema database",
                         errorCode: 500,
@@ -1840,21 +1840,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user does not supply a Schema UUID",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the schema database",
                         errorCode: 500,
@@ -1923,21 +1923,21 @@ angular.module('AgavePlatformScienceAPILib').factory('MetaController', function 
                 deffered.resolve(result.body);
             }, function (result) {
                 //Error handling for custom HTTP status codes
-                if (code == 400) {
+                if (result.code == 400) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Raised if a user does not supply a Schema UUID",
                         errorCode: 400,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 403) {
+                } else if (result.code == 403) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "Failed to authenticate the user",
                         errorCode: 403,
                         errorResponse: result.message
                     }, result.getContext()));
                     return;
-                } else if (code == 500) {
+                } else if (result.code == 500) {
                     deffered.reject(APIHelper.appendContext({
                         errorMessage: "The service was unable to query the schema database",
                         errorCode: 500,
