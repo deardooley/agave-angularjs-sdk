@@ -8,6 +8,70 @@
 angular.module('AgavePlatformScienceAPILib').factory('AppsController', function ($q, Configuration, HttpClient, APIHelper) {
     return {
         /**
+         * Search applications.
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {Dictionary} query   Optional parameter: Additional optional query parameters are supported by this endpoint
+         *
+         * @return {promise<array>}
+         */
+        searchApps: function (limit, offset, query) {
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+            query = query || null;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/apps/v2/";
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                "naked": true,
+                "limit": (null != limit) ? limit : 100,
+                "offset": (null != offset) ? offset : 0
+            });
+
+            if (query !== null){
+              queryBuilder = queryBuilder.concat('&'+query);
+            }
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept": "application/json",
+                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method: "GET",
+                queryUrl: queryUrl,
+                headers: headers,
+                cache: true
+            };
+            //
+            var response = HttpClient(config);
+            //
+            // //Create promise to return
+            var deferred = $q.defer();
+            //
+            // //process response
+            response.then(function (result) {
+                deferred.resolve(result.body);
+            }, function (result) {
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: "HTTP Response Not OK",
+                    errorCode: result.code,
+                    errorResponse: result.message
+                }, result.getContext()));
+            });
+
+            return deferred.promise;
+        },
+        /**
          * Get a list of available applications.
          * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
          * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
@@ -55,20 +119,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Register and update new applications.
@@ -111,20 +175,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get details of an application by it's unique id.
@@ -167,20 +231,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Update an application.
@@ -229,20 +293,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Edit an application.
@@ -291,20 +355,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes an application.
@@ -346,20 +410,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Grant a user permission for an application.
@@ -408,20 +472,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes all permissions on an application.
@@ -463,20 +527,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get a specific user's permissions for an application.
@@ -521,20 +585,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Add or update a user's permission for an application.
@@ -585,20 +649,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes all permissions for the given user on an application.
@@ -642,20 +706,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get a submission form for the named application.
@@ -697,20 +761,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get the permission for this application.
@@ -760,20 +824,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * List the event history of this app
@@ -827,20 +891,20 @@ angular.module('AgavePlatformScienceAPILib').factory('AppsController', function 
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: "HTTP Response Not OK",
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         }
     }
 });

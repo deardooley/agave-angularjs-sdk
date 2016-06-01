@@ -73,7 +73,6 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
 
             //perform parameter validation
             if (queryBuilder == null) {
-                console.log('queryBuilder is null');
                 return;
             }
 
@@ -81,7 +80,7 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
                 return queryBuilder;
             }
 
-            //iterate and replace parameters             
+            //iterate and replace parameters
             for (var key in parameters) {
                 var replaceValue = "";
 
@@ -110,7 +109,6 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
 
             //perform parameter validation
             if (queryBuilder == null) {
-                console.log('queryBuilder is null');
                 return;
             }
             if (parameters == queryBuilder) {
@@ -139,7 +137,6 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
 
             var match = url.match(re);
             if (match == null) {
-                console.log('Invalid Url format');
                 return;
 
             }
@@ -256,7 +253,7 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
         cleanObject: function (input) {
             for (var key in input) {
                 var value = input[key];
-                if (!value) {
+                if (typeof value === 'undefined' || value === null) {
                     if (input.constructor === Array) {
                         input.splice(key, 1)
                     }
