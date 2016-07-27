@@ -47,7 +47,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
         var response = new HttpResponse();
         if (resp) {
             response.body = resp.data;
-            response.headers = resp.headers();
+            response.headers = resp.headers;
             response.statusCode = resp.status;
         }
 
