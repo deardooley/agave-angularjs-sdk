@@ -1095,9 +1095,9 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             });
 
             //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
-            });
+            // queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+            //     "naked": true
+            // });
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
@@ -1277,9 +1277,9 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             });
 
             //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
-            });
+            // queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+            //     "naked": true
+            // });
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);

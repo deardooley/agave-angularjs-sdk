@@ -27,9 +27,9 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController', funct
             });
 
             //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
-            });
+            // queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+            //     "naked": true
+            // });
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
