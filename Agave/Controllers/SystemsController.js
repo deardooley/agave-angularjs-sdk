@@ -7,6 +7,49 @@
 'use strict';
 angular.module('AgavePlatformScienceAPILib').factory('SystemsController', function ($q, Configuration, HttpClient, APIHelper) {
     return {
+      /**
+         * Search systems
+         * @param {string|null} query                    The query to be appended to the url.
+         */
+        searchSystems: function (query) {
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = query ? baseUri + "/systems/v2/?" + query : baseUri + "/systems/v2/";
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "accept": "application/json",
+                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method: "GET",
+                queryUrl: queryUrl,
+                headers: headers,
+                cache: true
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered = $q.defer();
+
+            //process response
+            response.then(function (result) {
+                deffered.resolve(result.body);
+            }, function (result) {
+                deffered.reject(APIHelper.appendContext({
+                    errorMessage: "HTTP Response Not OK",
+                    errorCode: result.code,
+                    errorResponse: result.message
+                }, result.getContext()));
+            });
+
+            return deffered.promise;
+        },
         /**
          * Show all systems available to the user.
          * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
