@@ -301,6 +301,74 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             return deffered.promise;
         },
         /**
+         * Import a file from a given url
+         * @param {string} urlToIngest    Required parameter: The file url to import
+         * @param {string} path    Required parameter: The destination path of the new file to be copied
+         * @param {string} systemId    Required parameter: The destination id of the system of the new file to be copied
+         * @param {string|null} fileType    Optional parameter: The file format this file is in. Defaults to raw. This will be used in file transform operations.
+         * @param {string|null} notifications    Optional parameter: The URI to notify when the import is complete. This can be an email address or http URL. If a URL is given, a GET will be made to this address. URL templating is supported. Valid template values are: ${NAME}, ${SOURCE_FORMAT}, ${DEST_FORMAT}, ${STATUS}
+         *
+         * @return {promise<FileInfo>}
+         */
+        importFileItem: function (urlToIngest, path, systemId, fileType, notifications) {
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI
+            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}";
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                "path": path,
+                "systemId": systemId
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                "Accept": "multipart/form-data",
+                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+            };
+
+            //prepare form data
+            var formDataDictionary = {
+                "urlToIngest": urlToIngest,
+                "fileName": path,
+                "fileType": fileType,
+                "notifications": notifications
+            };
+
+            //Remove null values
+            APIHelper.cleanObject(formDataDictionary);
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method: "POST",
+                queryUrl: queryUrl,
+                headers: headers,
+                formData: formDataDictionary,
+            };
+
+            var response = HttpClient(config);
+
+            //Create promise to return
+            var deffered = $q.defer();
+
+            //process response
+            response.then(function (result) {
+                deffered.resolve(result.body);
+            }, function (result) {
+                deffered.reject(APIHelper.appendContext({
+                    errorMessage: "HTTP Response Not OK",
+                    errorCode: result.code,
+                    errorResponse: result.message
+                }, result.getContext()));
+            });
+
+            return deffered.promise;
+        },
+        /**
          * Upload a file to the given system
          * @param {string} fileToUpload    Required parameter: The file to upload to the remote system
          * @param {string} path    Required parameter: The path of the file relative to the user's default storage location.
@@ -782,11 +850,6 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "path": path,
                 "systemId": systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
             });
 
             //validate and preprocess url

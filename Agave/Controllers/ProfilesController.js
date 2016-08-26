@@ -18,7 +18,7 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController', funct
             username = username || "me";
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
+            var baseUri = Configuration.BASEURI;
             var queryBuilder = baseUri + "/profiles/v2/{username}";
 
             //Process template parameters
