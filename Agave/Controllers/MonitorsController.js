@@ -43,7 +43,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -125,7 +125,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -220,7 +220,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -301,7 +301,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -401,7 +401,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -578,7 +578,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -667,7 +667,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
@@ -767,7 +767,7 @@ angular.module('AgavePlatformScienceAPILib').factory('MonitorsController', funct
             var response = HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
