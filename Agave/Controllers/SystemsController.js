@@ -130,11 +130,6 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/systems/v2/";
 
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
-            });
-
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
 
@@ -246,11 +241,6 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "systemId": systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
             });
 
             //validate and preprocess url
@@ -896,11 +886,6 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             //prepare query string for API call
             var baseUri = Configuration.BASEURI
             var queryBuilder = baseUri + "/systems/v2";
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
-            });
 
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
