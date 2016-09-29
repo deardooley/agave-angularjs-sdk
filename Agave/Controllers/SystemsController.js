@@ -70,7 +70,6 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             var queryBuilder = baseUri + "/systems/v2/";
 
             var params = {
-                "naked": true,
                 "offset": offset,
                 "limit": (null != limit) ? limit : 100,
                 "type": (type != null) ? type : null
@@ -184,11 +183,6 @@ angular.module('AgavePlatformScienceAPILib').factory('SystemsController', functi
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
                 "systemId": systemId
-            });
-
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
             });
 
             //validate and preprocess url

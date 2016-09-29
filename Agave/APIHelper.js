@@ -143,7 +143,9 @@ angular.module('AgavePlatformScienceAPILib').factory('APIHelper', function () {
             //remove redundant forward slashes
             var protocol = match[0];
             var queryUrl = url.substring(protocol.length);
-            queryUrl = queryUrl.replace(/\/\/+/, "/");
+            queryUrl = queryUrl
+                        .replace(/\/\/+/, '/')
+                        .replace(/\/+/g, '/');
 
             var result = protocol + queryUrl;
             return result;
