@@ -186,6 +186,7 @@ angular.module('AgavePlatformScienceAPILib').factory('PostitsController', functi
                 method: "GET",
                 queryUrl: queryUrl,
                 headers: headers,
+                cache: false
             };
 
             var response = HttpClient(config);
