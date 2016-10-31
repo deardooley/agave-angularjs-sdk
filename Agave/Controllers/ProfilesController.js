@@ -314,23 +314,26 @@ angular.module('AgavePlatformScienceAPILib').factory('ProfilesController', funct
          * @param {string|null} email    Optional parameter: The user email address
          * @param {string|null} name    Optional parameter: The user full name
          * @param {string|null} username    Optional parameter: The username to search for
+         * @param {string|null} first_name    Optional parameter: The user's last name to search for
+         * @param {string|null} last_name    Optional parameter: The user's first name to search for
          *
          * @return {promise<array>}
          */
-        listProfiles: function (email, name, username) {
+         listProfiles: function (email, name, username, first_name, last_name ) {
 
-            //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/profiles/v2/";
+             //prepare query string for API call
+             var baseUri = Configuration.BASEURI
+             var queryBuilder = baseUri + "/profiles/v2/";
 
-            //Process query parameters
-            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "email": email,
-                "name": name,
-                "username": username
-            });
-
+             //Process query parameters
+             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                 "naked": true,
+                 "email": email,
+                 "name": name,
+                 "first_name": first_name,
+                 "last_name": last_name,
+                 "username": username
+             });
             //validate and preprocess url
             var queryUrl = APIHelper.cleanUrl(queryBuilder);
 
