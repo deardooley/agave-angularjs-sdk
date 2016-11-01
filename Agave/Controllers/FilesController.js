@@ -983,6 +983,7 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
                 method: "GET",
                 queryUrl: queryUrl,
                 headers: headers,
+                cache: false
             };
 
             var response = HttpClient(config);
