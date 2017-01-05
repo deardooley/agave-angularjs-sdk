@@ -44,7 +44,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
     };
 
     var convertHttpResponse = function (resp) {
-        var response = new HttpResponse();
+        var response = {};
         if (resp) {
             response.body = resp.data;
             response.headers = resp.headers;
@@ -66,7 +66,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
         var convertedRequest = convertHttpRequest(req);
 
         //create a context to hold raw request and response
-        var context = new HttpContext();
+        var context = {};
         context.request = req;
 
         //make the http call.
