@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('FilesController', function ($q, Configuration, HttpClient, APIHelper, FileManagementActionTypeEnum) {
+angular.module('AgavePlatformScienceAPILib').factory('FilesController', ['$q', '$localStorage', 'Configuration', 'HttpClient', 'APIHelper', function ($q, $localStorage, Configuration, HttpClient, APIHelper) {
     return {
 
         getPublicUrlForSystemAndPath: function(systemId, path) {
@@ -26,20 +26,20 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         uploadBlob: function (content, fileName, path, append, fileType, notifications) {
 
             //Assign default values
-            append = append || "false";
+            append = append || 'false';
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -47,64 +47,63 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare form data
             var formDataDictionary = {
-                "fileType": fileType,
-                "notifications": notifications,
-                "append": (null != append) ? append : "false"
+                'fileType': fileType,
+                'notifications': notifications,
+                'append': (null !== append) ? append : 'false'
             };
 
             //Remove null values
             APIHelper.cleanObject(formDataDictionary);
 
-            var boundary = "---------------------------7da24f2e50046";
+            var boundary = '---------------------------7da24f2e50046';
 
-            var body = '--' + boundary + '\r\n'
-                + 'Content-Disposition: form-data; name="fileToUpload";'
-                + 'filename="' + fileName + '"\r\n'
-                + 'Content-type: application/octet-stream\r\n\r\n'
-                + content + '\r\n';
+            var body = '--' + boundary + '\r\n' +
+                'Content-Disposition: form-data; name="fileToUpload";' +
+                'filename="' + fileName + '"\r\n' +
+                'Content-type: application/octet-stream\r\n\r\n' +
+                content + '\r\n';
 
             for(var key in formDataDictionary) {
-                body += '--' + boundary + '\n'
-                    + 'Content-Disposition: form-data; name="'+key+'";'
-                    + 'Content-type: application/octet-stream\r\n\r\n'
-                    + formDataDictionary[key] + '\r\n';
+                body += '--' + boundary + '\n' +
+                    'Content-Disposition: form-data; name="'+key+'";' +
+                    'Content-type: application/octet-stream\r\n\r\n' +
+                    formDataDictionary[key] + '\r\n';
             }
 
-            body += '--'+ boundary + '--'
-                + '\r\n';
+            body += '--'+ boundary + '--' + '\r\n';
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 formData: body,
                 cache: true
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Upload a file to the user's default storage system.
@@ -120,20 +119,20 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         uploadFileItemToDefaultSystem: function (fileToUpload, append, fileName, fileType, notifications, path) {
 
             //Assign default values
-            append = append || "false";
+            append = append || 'false';
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -141,17 +140,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare form data
             var formDataDictionary = {
-                "fileToUpload": fileToUpload,
-                "fileName": fileName,
-                "fileType": fileType,
-                "notifications": notifications,
-                "append": (null != append) ? append : "false"
+                'fileToUpload': fileToUpload,
+                'fileName': fileName,
+                'fileType': fileType,
+                'notifications': notifications,
+                'append': (null !== append) ? append : 'false'
             };
 
             //Remove null values
@@ -159,29 +158,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 formData: formDataDictionary,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Perform an action on a file or folder.
@@ -193,17 +192,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         updateInvokeFileActionOnDefaultSystem: function (body, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -211,9 +210,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -221,29 +220,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "PUT",
+                method: 'PUT',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes a file or folder on the user's default storage system.
@@ -254,17 +253,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         deleteFileItemOnDefaultSystem: function (path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -272,33 +271,33 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "DELETE",
+                method: 'DELETE',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Import a file from a given url
@@ -313,13 +312,13 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         importFileItem: function (urlToIngest, path, systemId, fileType, notifications) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path,
-                "systemId": systemId
+                'path': path,
+                'systemId': systemId
             });
 
             //validate and preprocess url
@@ -327,16 +326,16 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "multipart/form-data",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'multipart/form-data',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare form data
             var formDataDictionary = {
-                "urlToIngest": urlToIngest,
-                "fileName": path,
-                "fileType": fileType,
-                "notifications": notifications
+                'urlToIngest': urlToIngest,
+                'fileName': path,
+                'fileType': fileType,
+                'notifications': notifications
             };
 
             //Remove null values
@@ -344,29 +343,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 formData: formDataDictionary,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Upload a file to the given system
@@ -382,18 +381,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         uploadFileItem: function (fileToUpload, path, systemId, fileName, fileType, notifications) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path,
-                "systemId": systemId
+                'path': path,
+                'systemId': systemId
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -401,16 +400,16 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "multipart/form-data",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'multipart/form-data',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare form data
             var formDataDictionary = {
-                "fileToUpload": fileToUpload,
-                "fileName": fileName,
-                "fileType": fileType,
-                "notifications": notifications
+                'fileToUpload': fileToUpload,
+                'fileName': fileName,
+                'fileType': fileType,
+                'notifications': notifications
             };
 
             //Remove null values
@@ -418,29 +417,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 formData: formDataDictionary,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Perform an action on a file or folder.
@@ -453,18 +452,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         updateInvokeFileItemAction: function (body, systemId, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -472,9 +471,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -482,29 +481,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "PUT",
+                method: 'PUT',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get a remote directory listing on a specific system.
@@ -521,20 +520,20 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/listings/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/listings/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0
+                'naked': true,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0
             });
 
             //validate and preprocess url
@@ -542,35 +541,35 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
                 cache: false
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Update permissions for a single user on their default storage system.
@@ -582,17 +581,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         updateFileItemPermissionsOnDefaultSystem: function (body, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/pems/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/pems/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -600,9 +599,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -610,29 +609,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Update permissions for a single user.
@@ -645,18 +644,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         updateFileItemPermission: function (body, systemId, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/pems/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -664,9 +663,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -674,29 +673,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Download a file from the user's default storage location.
@@ -715,22 +714,22 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/history/system/{systemId}/{filePath}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/history/system/{systemId}/{filePath}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "filePath": filePath,
-                "systemId": systemId
+                'filePath': filePath,
+                'systemId': systemId
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "created": created,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0,
-                "status": status
+                'naked': true,
+                'created': created,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0,
+                'status': status
             });
 
             //validate and preprocess url
@@ -738,34 +737,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * List event history of a file item on the user's default storage system
@@ -783,21 +782,21 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/history/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/history/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "created": created,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0,
-                "status": status
+                'naked': true,
+                'created': created,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0,
+                'status': status
             });
 
             //validate and preprocess url
@@ -805,34 +804,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes a file or folder at the specified path on the specified remote system.
@@ -844,13 +843,13 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         deleteFileItem: function (path, systemId) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path,
-                "systemId": systemId
+                'path': path,
+                'systemId': systemId
             });
 
             //validate and preprocess url
@@ -858,33 +857,33 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "DELETE",
+                method: 'DELETE',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Deletes all permissions on a file except those of the owner.
@@ -896,18 +895,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         deleteClearFileItemPermissions: function (systemId, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/pems/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -915,33 +914,33 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "DELETE",
+                method: 'DELETE',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Download a file from the given system
@@ -956,18 +955,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             force = force || false;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path,
-                "systemId": systemId
+                'path': path,
+                'systemId': systemId
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "force": (null != force) ? force : false
+                'force': (null !== force) ? force : false
             });
 
             //validate and preprocess url
@@ -975,34 +974,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
                 cache: false
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Download a file from the user's default storage location.
@@ -1016,17 +1015,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             force = force || false;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "force": (null != force) ? force : false
+                'force': (null !== force) ? force : false
             });
 
             //validate and preprocess url
@@ -1034,33 +1033,33 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Get a remote directory listing on the user's default storage system
@@ -1076,19 +1075,19 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/listings/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/listings/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0
+                'naked': true,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0
             });
 
             //validate and preprocess url
@@ -1096,34 +1095,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * List all the share permissions for a file or folder.
@@ -1140,20 +1139,20 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/pems/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/pems/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0
+                'naked': true,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0
             });
 
             //validate and preprocess url
@@ -1161,34 +1160,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * List all the share permissions for a file or folder.
@@ -1204,19 +1203,19 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
             offset = offset || 0;
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/pems/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/pems/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true,
-                "limit": (null != limit) ? limit : 100,
-                "offset": (null != offset) ? offset : 0
+                'naked': true,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0
             });
 
             //validate and preprocess url
@@ -1224,34 +1223,34 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Import file item from a remote URL to the target system
@@ -1264,18 +1263,18 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         createImportFileItem: function (body, systemId, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/system/{systemId}/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/system/{systemId}/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "systemId": systemId,
-                "path": path
+                'systemId': systemId,
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": true
+                'naked': true
             });
 
             //validate and preprocess url
@@ -1283,9 +1282,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -1293,29 +1292,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         },
         /**
          * Import file item from a remote URL to the target system
@@ -1327,17 +1326,17 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
         createImportFileItemToDefaultSystem: function (body, path) {
 
             //prepare query string for API call
-            var baseUri = Configuration.BASEURI
-            var queryBuilder = baseUri + "/files/v2/media/{path}";
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/files/v2/media/{path}';
 
             //Process template parameters
             queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-                "path": path
+                'path': path
             });
 
             //Process query parameters
             queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
-                "naked": "true"
+                'naked': 'true'
             });
 
             //validate and preprocess url
@@ -1345,9 +1344,9 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare headers
             var headers = {
-                "Accept": "application/json",
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + Configuration.oAuthAccessToken
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
             };
 
             //Remove null values
@@ -1355,29 +1354,29 @@ angular.module('AgavePlatformScienceAPILib').factory('FilesController', function
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "POST",
+                method: 'POST',
                 queryUrl: queryUrl,
                 headers: headers,
                 body: body
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         }
-    }
-});
+    };
+}]);

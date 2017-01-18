@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('StatusIoController', function ($q, Configuration, HttpClient, APIHelper) {
+angular.module('AgavePlatformScienceAPILib').factory('StatusIoController', ['$q', 'Configuration', 'HttpClient', 'APIHelper', function ($q, Configuration, HttpClient, APIHelper) {
     return {
         /**
          * List status for all regions
@@ -19,33 +19,33 @@ angular.module('AgavePlatformScienceAPILib').factory('StatusIoController', funct
 
             //prepare headers
             var headers = {
-                "accept": "application/json",
+                'accept': 'application/json',
             };
 
             //prepare and invoke the API call request to fetch the response
             var config = {
-                method: "GET",
+                method: 'GET',
                 queryUrl: queryUrl,
                 headers: headers,
             };
 
-            var response = HttpClient(config);
+            var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
-                    errorMessage: "HTTP Response Not OK",
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         }
-    }
-});
+    };
+}]);

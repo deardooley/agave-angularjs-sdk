@@ -6,7 +6,7 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q, $http, APIHelper, Configuration) {
+angular.module('AgavePlatformScienceAPILib').factory('HttpClient', ['$q', '$http', 'APIHelper', function ($q, $http, APIHelper) {
 
     var convertHttpRequest = function (req) {
         //Convert to request's version of http request
@@ -19,7 +19,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
         if (req.username) {
             //Basic auth....
             options.headers = options.headers || {};
-            options.headers["Authorization"] = "Basic " + APIHelper.base64Encode(req.username + ":" + req.password);
+            options.headers.Authorization = 'Basic ' + APIHelper.base64Encode(req.username + ':' + req.password);
         }
         if (req.body) {
             options.data = req.body;
@@ -28,7 +28,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
             options.data = APIHelper.createFormData(req.formData);
             options.transformRequest = angular.identity;
             //need to reset content type header
-            options.headers["content-type"] = undefined;
+            options.headers['content-type'] = undefined;
         }
         if (req.form) {
             options.data = req.form;
@@ -37,7 +37,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
                 return encoded;
             };
             //Set the content type
-            options.headers["content-type"] = 'application/x-www-form-urlencoded';
+            options.headers['content-type'] = 'application/x-www-form-urlencoded';
 
         }
         return options;
@@ -71,7 +71,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
 
         //make the http call.
         var response = $http(convertedRequest);
-        var deffered = $q.defer();
+        var deferred = $q.defer();
 
         response.then(function (resp) {
 
@@ -80,7 +80,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
 
             //Append the context to the body for easy access
             APIHelper.appendContext(response.body, context);
-            deffered.resolve(response);
+            deferred.resolve(response);
 
         }, function (resp) {
             var response = convertHttpResponse(resp);
@@ -90,11 +90,11 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', function ($q,
 
             //Append the context to the error object
             APIHelper.appendContext(error, context);
-            deffered.reject(error);
+            deferred.reject(error);
         });
 
-        return deffered.promise;
+        return deferred.promise;
     }
 
     return executeRequest;
-});
+}]);

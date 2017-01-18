@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('AgavePlatformScienceAPILib').factory('TenantsController', function ($q, Configuration, HttpClient, APIHelper) {
+angular.module('AgavePlatformScienceAPILib').factory('TenantsController', ['$q', 'Configuration', 'HttpClient', 'APIHelper', function ($q, Configuration, HttpClient, APIHelper) {
     return {
         /**
          * Get a list of available tenants.
@@ -54,20 +54,20 @@ angular.module('AgavePlatformScienceAPILib').factory('TenantsController', functi
             var response = new HttpClient(config);
 
             //Create promise to return
-            var deffered = $q.defer();
+            var deferred = $q.defer();
 
             //process response
             response.then(function (result) {
-                deffered.resolve(result.body);
+                deferred.resolve(result.body);
             }, function (result) {
-                deffered.reject(APIHelper.appendContext({
+                deferred.reject(APIHelper.appendContext({
                     errorMessage: 'HTTP Response Not OK',
                     errorCode: result.code,
                     errorResponse: result.message
                 }, result.getContext()));
             });
 
-            return deffered.promise;
+            return deferred.promise;
         }
     };
-});
+}]);
