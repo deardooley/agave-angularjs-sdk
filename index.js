@@ -18,7 +18,9 @@ require('./Agave/Controllers/PostitsController.js');
 require('./Agave/Controllers/ProfilesController.js');
 require('./Agave/Controllers/StatusIoController.js');
 require('./Agave/Controllers/SystemsController.js');
+require('./Agave/Controllers/TagsController.js');
 require('./Agave/Controllers/TenantsController.js');
 require('./Agave/Controllers/TransformsController.js');
+require('./Agave/Controllers/UUIDsController.js');
 
 module.exports = 'AgavePlatformScienceAPILib';
