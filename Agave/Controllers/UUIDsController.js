@@ -17,7 +17,7 @@ angular.module('AgavePlatformScienceAPILib').factory('UUIDsController', ['$q', '
 
         //Process template parameters
         queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
-            'uuid': uuid,
+            'uuid': uuid || null,
         });
 
         queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
