@@ -114,6 +114,58 @@ angular.module('AgavePlatformScienceAPILib').factory('TagsController', ['$q', 'C
       },
 
       /**
+       * Update or Add new Tag.
+       * @param {Tag} body    Required parameter: The tag to add.
+       *
+       * @return {promise<Tag>}
+       */
+      updateTag: function (tagId, body) {
+
+          //prepare query string for API call
+          var baseUri = Configuration.BASEURI;
+          var queryBuilder = baseUri + '/tags/v2/' + tagId;
+
+          //validate and preprocess url
+          var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+          //prepare headers
+          var headers = {
+              'accept': 'application/json',
+              'content-type': 'application/json; charset=utf-8',
+              'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
+          };
+
+          //Remove null values
+          APIHelper.cleanObject(body);
+
+          //prepare and invoke the API call request to fetch the response
+          var config = {
+              method: 'POST',
+              queryUrl: queryUrl,
+              headers: headers,
+              body: body
+          };
+
+          var response = new HttpClient(config);
+
+          //Create promise to return
+          var deferred = $q.defer();
+
+          //process response
+          response.then(function (result) {
+              deferred.resolve(result.body);
+          }, function (result) {
+              deferred.reject(APIHelper.appendContext({
+                  errorMessage: 'HTTP Response Not OK',
+                  errorCode: result.code,
+                  errorResponse: result.message
+              }, result.getContext()));
+          });
+
+          return deferred.promise;
+      },
+
+      /**
        * Retrieve Metadata.
        * @param {string} id    Required parameter: The uuid of the tag item
        *
