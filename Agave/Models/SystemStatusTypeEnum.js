@@ -8,17 +8,11 @@
 angular.module('AgavePlatformScienceAPILib').factory('SystemStatusTypeEnum', function () {
     return {
 
-        //TODO: Write general description for this element
-
         UP: "UP",
-
-
-        //TODO: Write general description for this element
 
         DOWN: "DOWN",
 
-
-        //TODO: Write general description for this element
+        MAINTENANCE: "MAINTENANCE",
 
         UNKNOWN: "UNKNOWN",
 
