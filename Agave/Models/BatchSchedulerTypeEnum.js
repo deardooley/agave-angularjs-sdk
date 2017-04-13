@@ -8,59 +8,23 @@
 angular.module('AgavePlatformScienceAPILib').factory('BatchSchedulerTypeEnum', function () {
     return {
 
-        //TODO: Write general description for this element
-
-        COBALT: "COBALT",
-
-
-        //TODO: Write general description for this element
-
         CONDOR: "CONDOR",
-
-
-        //TODO: Write general description for this element
-
+        CUSTOM_CONDOR: "CUSTOM_CONDOR",
+        CUSTOM_GRIDENGINE: "CUSTOM_GRIDENGINE",
+        CUSTOM_LOADLEVELER: "CUSTOM_LOADLEVELER",
+        CUSTOM_LSF: "CUSTOM_LSF",
+        CUSTOM_PBS: "CUSTOM_PBS",
+        CUSTOM_SLURM: "CUSTOM_SLURM",
+        CUSTOM_TORQUE: "CUSTOM_TORQUE",
         FORK: "FORK",
-
-
-        //TODO: Write general description for this element
-
         LOADLEVELER: "LOADLEVELER",
-
-
-        //TODO: Write general description for this element
-
         LSF: "LSF",
-
-
-        //TODO: Write general description for this element
-
         MOAB: "MOAB",
-
-
-        //TODO: Write general description for this element
-
         PBS: "PBS",
-
-
-        //TODO: Write general description for this element
-
         SGE: "SGE",
-
-
-        //TODO: Write general description for this element
-
         SLURM: "SLURM",
-
-
-        //TODO: Write general description for this element
-
         TORQUE: "TORQUE",
-
-
-        //TODO: Write general description for this element
-
-        UNKNOWN: "UNKNOWN",
+        UNKNOWN: "UNKNOWN"
 
     };
 });
