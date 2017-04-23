@@ -18,13 +18,21 @@ gulp.task('clean', function (cb) {
 
 gulp.task('concat-uglify-js', ['clean'], function() {
   return gulp.src([
-    src + '/*.js',
-      src + '/*/*.js',
-      dst + '/' + jsFile
-    ])
-    .pipe(concat(jsFile))
-    .pipe(uglify())
-    .pipe(gulp.dest(dst));
+    src + '/Configuration.js',
+    src + '/APIHelper.js',
+    src + '/Http/Client/HttpContext.js',
+    src + '/Http/Client/RequestClient.js',
+    src + '/Http/Request/HttpRequest.js',
+    src + '/Http/Response/HttpResponse.js',
+    src + '/Controllers/*.js',
+    src + '/Models/*.js',
+    dst + '/' + jsFile
+  ])
+      .pipe(concat(jsFile))
+      .pipe(uglify({
+        mangle: false
+      }))
+      .pipe(gulp.dest(dst));
 });
 
 gulp.task('default', ['concat-uglify-js']);
