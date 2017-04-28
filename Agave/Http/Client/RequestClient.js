@@ -19,7 +19,8 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', ['$q', '$http
         if (req.username) {
             //Basic auth....
             options.headers = options.headers || {};
-            options.headers.Authorization = 'Basic ' + APIHelper.base64Encode(req.username + ':' + req.password);
+            options.headers.Authorization = 'Basic ' + btoa(req.username + ':' + req.password);
+            console.log("Authorization: " + options.headers.Authorization);
         }
         if (req.body) {
             options.data = req.body;
@@ -37,7 +38,7 @@ angular.module('AgavePlatformScienceAPILib').factory('HttpClient', ['$q', '$http
                 return encoded;
             };
             //Set the content type
-            options.headers['content-type'] = 'application/x-www-form-urlencoded';
+            options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
         }
         return options;
