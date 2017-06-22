@@ -23,4 +23,4 @@ require('./Agave/Controllers/TenantsController.js');
 require('./Agave/Controllers/TransformsController.js');
 require('./Agave/Controllers/UUIDsController.js');
 
-module.exports = 'AgavePlatformScienceAPILib';
+module.exports = 'agave.sdk';

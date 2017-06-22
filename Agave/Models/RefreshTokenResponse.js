@@ -1,5 +1,5 @@
 /**
- *AgavePlatformScienceAPILib
+ *agave.sdk
  *
  * This is the repsonse object from the token service upon an auth token refresh.
  */

@@ -1,5 +1,5 @@
 /**
- *AgavePlatformScienceAPILib
+ *agave.sdk
  *
  * This is the response object from the token service upon an authentication success.
  */
