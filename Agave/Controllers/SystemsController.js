@@ -1219,6 +1219,73 @@ angular.module('agave.sdk').factory('SystemsController', ['$q', 'Configuration',
             return deferred.promise;
         },
         /**
+         * List the event history of this system
+         * @param {string} systemId    Required parameter: The id of the system for which the history will be returned
+         * @param {int|null} limit    Optional parameter: The maximum number of results returned from this query
+         * @param {int|null} offset    Optional parameter: The number of results skipped in the result set returned from this query
+         * @param {string|null} status    Optional parameter: The event status
+         * @param {string|null} created    Optional parameter: The date the event occurred
+         *
+         * @return {promise<HistoryEvent>}
+         */
+        listSystemHistory: function (systemId, limit, offset, status, created) {
+            //Assign default values
+            limit = limit || 100;
+            offset = offset || 0;
+
+            //prepare query string for API call
+            var baseUri = Configuration.BASEURI;
+            var queryBuilder = baseUri + '/systems/v2/{systemId}/history';
+
+            //Process template parameters
+            queryBuilder = APIHelper.appendUrlWithTemplateParameters(queryBuilder, {
+                'systemId': systemId
+            });
+
+            //Process query parameters
+            queryBuilder = APIHelper.appendUrlWithQueryParameters(queryBuilder, {
+                // 'naked': true,
+                'limit': (null !== limit) ? limit : 100,
+                'offset': (null !== offset) ? offset : 0,
+                'status': status,
+                'created': created
+            });
+
+            //validate and preprocess url
+            var queryUrl = APIHelper.cleanUrl(queryBuilder);
+
+            //prepare headers
+            var headers = {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + Configuration.oAuthAccessToken
+            };
+
+            //prepare and invoke the API call request to fetch the response
+            var config = {
+                method: 'GET',
+                queryUrl: queryUrl,
+                headers: headers,
+            };
+
+            var response = new HttpClient(config);
+
+            //Create promise to return
+            var deferred = $q.defer();
+
+            //process response
+            response.then(function (result) {
+                deferred.resolve(result.body);
+            }, function (result) {
+                deferred.reject(APIHelper.appendContext({
+                    errorMessage: 'HTTP Response Not OK',
+                    errorCode: result.code,
+                    errorResponse: result.message
+                }, result.getContext()));
+            });
+
+            return deferred.promise;
+        },
+        /**
          * Clone a system into  a new system. Previous system's auth credentials are not copied over
          * @param {SystemCloneAction} body    Required parameter: A clone action request with id of new system
          * @param {string} systemId    Required parameter: The unique id of the system
